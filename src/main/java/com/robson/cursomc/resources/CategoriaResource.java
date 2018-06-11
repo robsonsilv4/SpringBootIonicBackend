@@ -14,7 +14,7 @@ import com.robson.cursomc.domain.Categoria;
 import com.robson.cursomc.services.CategoriaService;
 
 @RestController
-@RequestMapping(value = "categorias")
+@RequestMapping(value = "/categorias")
 public class CategoriaResource {
 	@Autowired
 	private CategoriaService service;
