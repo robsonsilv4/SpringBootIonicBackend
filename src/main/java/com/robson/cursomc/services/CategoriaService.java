@@ -6,6 +6,9 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.robson.cursomc.domain.Categoria;
@@ -28,22 +31,27 @@ public class CategoriaService {
 		obj.setId(null);
 		return repo.save(obj);
 	}
-	
+
 	public Categoria update(Categoria obj) {
 		find(obj.getId());
 		return repo.save(obj);
 	}
-	
+
 	public void delete(Integer id) {
 		find(id);
 		try {
-		repo.deleteById(id);
+			repo.deleteById(id);
 		} catch (ConstraintViolationException e) {
 			throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos");
 		}
 	}
-	
+
 	public List<Categoria> findAll() {
 		return repo.findAll();
+	}
+
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest);
 	}
 }
