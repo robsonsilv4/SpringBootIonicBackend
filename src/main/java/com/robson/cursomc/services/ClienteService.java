@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.robson.cursomc.domain.Cliente;
 import com.robson.cursomc.dto.ClienteDTO;
 import com.robson.cursomc.repositories.ClienteRepository;
-import com.robson.cursomc.services.exceptions.DataIntegrityException;
 import com.robson.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -36,8 +36,8 @@ public class ClienteService {
 		find(id);
 		try {
 			repo.deleteById(id);
-		} catch (DataIntegrityException e) {
-			throw new DataIntegrityException("Não é possivel excluir porque há entidades relacionadas");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Não é possivel excluir porque há entidades relacionadas");
 		}
 	}
 
