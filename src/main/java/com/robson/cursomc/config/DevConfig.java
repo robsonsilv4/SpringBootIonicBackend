@@ -9,13 +9,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.robson.cursomc.services.DBService;
+import com.robson.cursomc.services.EmailService;
+import com.robson.cursomc.services.SmtpEmailService;
 
 @Configuration
 @Profile("dev")
 public class DevConfig {
 	@Autowired
 	private DBService dbService;
-	
+
 	@Value("${spring.jpa.hibernate.ddl-auto}")
 	private String strategy;
 
@@ -24,8 +26,13 @@ public class DevConfig {
 		if (!"create".equals(strategy)) {
 			return false;
 		}
-		
+
 		dbService.instantiateTestDatabase();
 		return true;
+	}
+
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 }
