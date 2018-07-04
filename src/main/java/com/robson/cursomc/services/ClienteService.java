@@ -1,5 +1,6 @@
 package com.robson.cursomc.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.robson.cursomc.domain.Cidade;
 import com.robson.cursomc.domain.Cliente;
@@ -29,19 +31,22 @@ import com.robson.cursomc.services.exceptions.ObjectNotFoundException;
 public class ClienteService {
 	@Autowired
 	private BCryptPasswordEncoder pe;
-	
+
 	@Autowired
 	private ClienteRepository repo;
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
+	@Autowired
+	private S3Service s3Service;
+
 	public Cliente find(Integer id) {
 		UserSS user = UserService.authenticated();
 		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
@@ -103,5 +108,9 @@ public class ClienteService {
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 }
