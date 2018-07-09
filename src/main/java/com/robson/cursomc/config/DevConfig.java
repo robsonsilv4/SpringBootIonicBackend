@@ -15,6 +15,7 @@ import com.robson.cursomc.services.SmtpEmailService;
 @Configuration
 @Profile("dev")
 public class DevConfig {
+
 	@Autowired
 	private DBService dbService;
 
@@ -26,7 +27,6 @@ public class DevConfig {
 		if (!"create".equals(strategy)) {
 			return false;
 		}
-
 		dbService.instantiateTestDatabase();
 		return true;
 	}
@@ -35,4 +35,5 @@ public class DevConfig {
 	public EmailService emailService() {
 		return new SmtpEmailService();
 	}
+
 }

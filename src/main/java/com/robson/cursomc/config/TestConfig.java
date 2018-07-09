@@ -14,6 +14,7 @@ import com.robson.cursomc.services.MockEmailService;
 @Configuration
 @Profile("test")
 public class TestConfig {
+
 	@Autowired
 	private DBService dbService;
 
@@ -22,9 +23,10 @@ public class TestConfig {
 		dbService.instantiateTestDatabase();
 		return true;
 	}
-	
+
 	@Bean
 	public EmailService emailService() {
 		return new MockEmailService();
 	}
+
 }

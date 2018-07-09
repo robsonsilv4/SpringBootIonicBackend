@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
 public class S3Config {
+
 	@Value("{aws.access_key_id}")
 	private String awsId;
 
@@ -28,4 +29,5 @@ public class S3Config {
 				.withCredentials(new AWSStaticCredentialsProvider(awsCred)).build();
 		return s3client;
 	}
+
 }
